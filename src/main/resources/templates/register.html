@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <meta charset="UTF-8">
     <title>User Registration</title>
-    <script type='text/javascript' language='javascript' src='/js/validation.js'></script>
+
 </head>
 <body>
 <div class="container">
@@ -17,27 +17,31 @@
     <form action="#" th:action="@{/register}" th:object="${user}" method="post">
         <div class="form-group">
             <label for="name">Full Name</label>
-            <input class="form-control" th:field="*{name}" id="name" name="name" placeholder="Enter Full Name">
+            <input class="form-control" id="name" name="name" pattern=".{1,50}" placeholder="Enter Full Name" required
+                   th:field="*{name}">
             <p class="text-danger" th:each="error: ${#fields.errors('name')}"
                th:text="${error}">Validation error</p>
         </div>
         <div class="form-group">
             <label for="userid">Enter Username</label>
-            <input class="form-control" th:field="*{userid}" name="userid" id="userid"
+            <input class="form-control" id="userid" name="userid" pattern=".{1,50}" required th:field="*{userid}"
                    placeholder="Enter your username">
             <p class="text-danger" th:each="error : ${#fields.errors('userid')}"
                th:text="${error}">Validation error</p>
         </div>
         <div class="form-group">
             <label for="password">Enter Password</label>
-            <input class="form-control" type="password" th:field="*{password}" name="password" id="password"
+            <input class="form-control" id="password" name="password" pattern=".{1,50}" required
+                   th:field="*{password}" type="password"
                    placeholder="Enter password">
             <p class="text-danger" th:each="error : ${#fields.errors('password')}"
                th:text="${error}">Validation error</p>
         </div>
         <div class="form-group">
             <label for="matchingPassword">Confirm Password</label>
-            <input class="form-control" type="password" th:field="*{matchingPassword}" name="matchingPassword"
+            <input class="form-control" name="matchingPassword" pattern=".{1,50}" required
+                   th:field="*{matchingPassword}"
+                   type="password"
                    id="matchingPassword" placeholder="Confirm password">
             <p class="text-danger" th:each="error : ${#fields.errors('global')}"
                th:text="${error}">Validation error</p>

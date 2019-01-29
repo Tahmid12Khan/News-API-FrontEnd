@@ -3,7 +3,6 @@ package com.practice.news.Model;
 import com.practice.news.Validation.FieldMatch;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.Size;
 
 
@@ -18,11 +17,20 @@ public class User {
 	private String name;
 	@Column(unique = true)
 	@Size(min = 1, message = "Username cannot be of size 0")
-	@Size(max = 20, message = "Username cannot be more than 20 characters")
+	@Size(max = 50, message = "Username cannot be more than 50 characters")
 	private String userid;
 	@Size(min = 1, message = "Password cannot be of size 0")
+	@Size(max = 50, message = "Password cannot more than 50 characters")
 	private String password;
 	private String matchingPassword;
+
+	public User(@Size(min = 1, message = "Username cannot be of size 0") @Size(max = 50, message = "Username cannot be more than 50 characters") String userid, @Size(min = 1, message = "Password cannot be of size 0") @Size(max = 50, message = "Password cannot more than 50 characters") String password) {
+		this.userid = userid;
+		this.password = password;
+	}
+
+	public User() {
+	}
 
 	public Long getId() {
 		return id;

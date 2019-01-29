@@ -5,10 +5,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 public class RequestBuilder {
-	public static HttpEntity<String> buildRequest(String json){
+	public static HttpEntity<String> buildRequest(String json) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String>response = new HttpEntity<>(json, httpHeaders);
-		return response;
+		return new HttpEntity<>(json, httpHeaders);
 	}
 }

@@ -5,7 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -32,7 +33,7 @@ public class News {
 	@Size(min = 1, max = 50, message = "Name can't be empty or have more than 50 characters")
 	private String author;
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-mm-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@NotNull(message = "Date can't be empty")
 	private Date date;
 
@@ -40,11 +41,19 @@ public class News {
 
 	}
 
+	public News(long id) {
+		this.id = id;
+	}
+
 	public News(String title, String body, String author, Date date) {
 		this.title = title;
 		this.body = body;
 		this.author = author;
 		this.date = date;
+	}
+
+	public News(String author) {
+		this.author = author;
 	}
 
 
@@ -84,7 +93,10 @@ public class News {
 		return body.length() <= 100 ? body : body.substring(0, 99) + "...";
 	}
 
-	public Date dateFormat() {
-		return date;
+	public String dateFormat() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String strDate = dateFormat.format(date);
+		System.out.println("Date: " + strDate);
+		return strDate;
 	}
 }

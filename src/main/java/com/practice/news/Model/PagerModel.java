@@ -7,7 +7,6 @@ public class PagerModel {
 	private int endPage;
 
 	public PagerModel(int totalPages, int currentPage) {
-		//setButtonsToShow(buttonsToShow);
 		currentPage++;
 		int halfPagesToShow = getButtonsToShow() / 2;
 		if (totalPages <= getButtonsToShow()) {

@@ -2,7 +2,6 @@ package com.practice.news.Controller.ConcreteFormatter;
 
 import com.fasterxml.jackson.xml.XmlMapper;
 import com.practice.news.Controller.InterfaceFormatter.iFormatter;
-import com.practice.news.Model.News;
 
 import java.io.IOException;
 

@@ -2,14 +2,13 @@ package com.practice.news.Controller;
 
 import com.practice.news.Controller.Factory.FormatterFactory;
 import com.practice.news.Controller.InterfaceFormatter.iFormatter;
+import com.practice.news.Error.Invalid;
 import com.practice.news.Model.News;
-import com.practice.news.Service.NewsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.practice.news.RestAPI;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,27 +19,28 @@ import java.util.Map;
 @Controller
 public class ShowNews {
 
-	private NewsService newsService;
-
-	@Autowired
-	public ShowNews(NewsService newsService) {
-		this.newsService = newsService;
-	}
-
 	@GetMapping(value = "/news/{id}")
 	public String showNews(@PathVariable String id, Model model) {
-		News news = newsService.findById(id);
-		model.addAttribute("news", news);
-		return "details";
+		ResponseEntity<News> news = RestAPI.request("", HttpMethod.GET, "news/" + id, new ParameterizedTypeReference<News>() {
+		});
+		if (news.getStatusCode() == HttpStatus.OK) {
+			model.addAttribute("news", news.getBody());
+			return "details";
+		}
+		return "error";
 	}
 
 	@GetMapping(value = "/news/download/{option}/{id}")
 	public ResponseEntity<Resource> formatView(@PathVariable Map<String, String> req) {
-		News news = newsService.findById(req.get("id"));
+		ResponseEntity<News> news = RestAPI.request("", HttpMethod.GET, "news/" + req.get("id"), new ParameterizedTypeReference<News>() {
+		});
+		if (news.getStatusCode() != HttpStatus.OK) {
+			throw new Invalid("News not found");
+		}
 
 		System.out.println(req.get("option"));
 		iFormatter formatter = FormatterFactory.getFormatter(req.get("option"));
-		String s = formatter.stringFormat(news);
+		String s = formatter.stringFormat(news.getBody());
 
 		return download(s, Long.parseLong(req.get("id")));
 

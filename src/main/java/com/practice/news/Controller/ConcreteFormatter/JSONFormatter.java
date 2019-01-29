@@ -3,8 +3,6 @@ package com.practice.news.Controller.ConcreteFormatter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.news.Controller.InterfaceFormatter.iFormatter;
-import com.practice.news.Model.News;
-
 
 public class JSONFormatter implements iFormatter {
 	private ObjectMapper obj;

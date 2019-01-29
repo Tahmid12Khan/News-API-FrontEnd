@@ -1,43 +1,26 @@
 package com.practice.news.Security;
 
-
-import com.practice.news.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.sql.DataSource;
-
-
-//
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
-	@Autowired
-	private WebApplicationContext applicationContext;
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private UserService userDetailsService;
-	private DataSource dataSource;
+	private CustomAuthenticationProvider customAuthenticationProvider;
 
-	private PasswordEncoder passwordEncoder;
 	@Autowired
-	public SecurityConfiguration(UserService userDetailsService, DataSource dataSource,
-								 PasswordEncoder passwordEncoder){
-		this.userDetailsService = userDetailsService;
-		this.dataSource = dataSource;
-		this.passwordEncoder = passwordEncoder;
+	public SecurityConfiguration(CustomAuthenticationProvider customAuthenticationProvider) {
+
+		this.customAuthenticationProvider = customAuthenticationProvider;
 
 	}
 
@@ -46,12 +29,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/register").permitAll()
+				.antMatchers("/register").anonymous()
 				.antMatchers("/").permitAll()
-				.antMatchers("/login").permitAll()
+				.antMatchers("/login").anonymous()
 				.antMatchers("/news").permitAll()
 				.antMatchers("/news/**").permitAll()
-				.anyRequest().fullyAuthenticated()
+				.anyRequest()
+				.fullyAuthenticated()
+				.and()
+				.formLogin()
+				.loginPage("/login")
+				.usernameParameter("userid")
+				.passwordParameter("password")
 				.and()
 				.logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -61,29 +50,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 
 	@Override
-	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-		auth.eraseCredentials(false);
+	protected void configure(final AuthenticationManagerBuilder auth) {
+		auth.eraseCredentials(false).authenticationProvider(customAuthenticationProvider);
 	}
 
 	@Override
-	public void configure(WebSecurity web) throws Exception {
+	public void configure(WebSecurity web) {
 		web.ignoring()
 				.antMatchers("/resources/**", "/js/**", "/css/**", "/import-headers.html");
 	}
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder);
-		return authProvider;
-	}
+
 	@Bean("authenticationManager")
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-
-
 
 
 }

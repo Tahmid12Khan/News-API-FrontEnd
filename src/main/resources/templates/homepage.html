@@ -43,7 +43,7 @@
         <span th:onclick="'window.location.href=\'/news/' + ${news.getId()} + '\''" th:text=" 'By ' "></span>
         <strong th:onclick="'window.location.href=\'/news/' + ${news.getId()} + '\''"
                 th:text="${news.author}"> </strong>
-        <span th:text="'on ' + ${news.date}"
+        <span th:text="'on ' + ${#dates.format(news.date, 'yyyy-MM-dd')}"
               th:onclick="'window.location.href=\'/news/' + ${news.getId()} + '\''"></span>
 
 

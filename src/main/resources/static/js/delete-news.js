@@ -8,8 +8,8 @@ $(document).ready(function () {
         var newsTitle = workingObject.find('h2').text();
         $.ajax({
             type: "DELETE",
-            url: window.location + "/delete-news/" + newsId,
-            success: function (resultMsg) {
+            url: "/delete-news/" + newsId,
+            success: function () {
                 workingObject.empty();
                 workingObject.html("<b>" + newsTitle + " has been Deleted</b>");
             },
@@ -19,4 +19,4 @@ $(document).ready(function () {
             }
         });
     });
-})
+});

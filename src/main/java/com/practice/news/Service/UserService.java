@@ -28,11 +28,6 @@ public class UserService implements UserDetailsService{
 		this.passwordEncoder = bCryptPasswordEncoder;
 	}
 
-//	public boolean findByUseridAndAndPassword(String userid, String password) {
-////		return userRepository.findByUseridAndAndPassword(userid, password).isPresent();
-////
-////	}
-
 	private Optional<User> findByUserid(User user) {
 		return userRepository.findByUserid(user.getUserid());
 
