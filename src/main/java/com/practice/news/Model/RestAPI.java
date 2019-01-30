@@ -1,8 +1,7 @@
-package com.practice.news;
+package com.practice.news.Model;
 
 import com.practice.news.Controller.Factory.FormatterFactory;
 import com.practice.news.Controller.InterfaceFormatter.iFormatter;
-import com.practice.news.Controller.RequestBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,6 @@ public class RestAPI {
 	public static <T, S> ResponseEntity<S> request(T send, HttpMethod method, String extenedURL,
 												   ParameterizedTypeReference<S> parameterizedTypeReference) {
 		check();
-		System.out.println("Format: " + formatter.stringFormat(send));
 		return restTemplate.exchange(url + extenedURL,
 				method, RequestBuilder.buildRequest(formatter.stringFormat(send)),
 				parameterizedTypeReference

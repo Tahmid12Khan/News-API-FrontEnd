@@ -1,7 +1,7 @@
 package com.practice.news.Security;
 
+import com.practice.news.Model.RestAPI;
 import com.practice.news.Model.User;
-import com.practice.news.RestAPI;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();
+		if (username == null || password == null) {
+			return null;
+		}
 		ResponseEntity<String> responseEntity = RestAPI.request(new User(username, password), HttpMethod.POST, "/user",
 				new ParameterizedTypeReference<String>() {
 				});
 		if (responseEntity.getStatusCode() == HttpStatus.OK) {
+			System.out.println("Logging");
 			RestAPI.addAuthentication(username, password);
 			return new UsernamePasswordAuthenticationToken(username, password);
 		}

@@ -3,8 +3,8 @@ package com.practice.news.Controller;
 
 import com.practice.news.Model.News;
 import com.practice.news.Model.PagerModel;
+import com.practice.news.Model.RestAPI;
 import com.practice.news.Model.RestPageImpl;
-import com.practice.news.RestAPI;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
@@ -21,7 +21,7 @@ public class HomeController {
 
 
 	@GetMapping("/")
-	public String greeting(@RequestParam(value = "1") int page, Model model) {
+	public String greeting(@RequestParam(defaultValue = "1") int page, Model model) {
 		ResponseEntity<RestPageImpl<News>> responseEntity = RestAPI.request("",
 				HttpMethod.GET,
 				"/news?page=" + page + "&&size=4",

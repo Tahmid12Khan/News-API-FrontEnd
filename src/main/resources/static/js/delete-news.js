@@ -19,4 +19,26 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on("click", '[name=del]', function () {
+        var ok = confirm("Are you sure you want to delete it?");
+        if (ok == false) return;
+        var workingObject = $("#id");
+        var newsId = workingObject.text();
+        var newsTitle = $("#title").text();
+        $.ajax({
+            type: "DELETE",
+            url: "/delete-news/" + newsId,
+            success: function () {
+                alert(newsTitle + " has been Deleted.");
+                $("<a href='/'></a>").click();
+                window.location.href = window.location.host;
+
+            },
+            error: function (e) {
+                alert("ERROR: ", e);
+                console.log("ERROR: ", e);
+            }
+        });
+    });
 });

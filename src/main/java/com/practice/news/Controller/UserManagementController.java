@@ -1,7 +1,7 @@
 package com.practice.news.Controller;
 
+import com.practice.news.Model.RestAPI;
 import com.practice.news.Model.User;
-import com.practice.news.RestAPI;
 import com.practice.news.Security.AuthenticationFacade;
 import com.practice.news.Security.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class UserManagementController {
 		if (bindingResult.hasErrors()) {
 			return "register";
 		}
-		System.out.println(user.toString());
+		System.out.println("Register: " + user.toString());
 
 		ResponseEntity<String> responseEntity = RestAPI.request(user, HttpMethod.POST, "/register",
 				new ParameterizedTypeReference<String>() {

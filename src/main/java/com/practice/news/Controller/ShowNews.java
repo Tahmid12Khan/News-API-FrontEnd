@@ -4,7 +4,7 @@ import com.practice.news.Controller.Factory.FormatterFactory;
 import com.practice.news.Controller.InterfaceFormatter.iFormatter;
 import com.practice.news.Error.Invalid;
 import com.practice.news.Model.News;
-import com.practice.news.RestAPI;
+import com.practice.news.Model.RestAPI;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;

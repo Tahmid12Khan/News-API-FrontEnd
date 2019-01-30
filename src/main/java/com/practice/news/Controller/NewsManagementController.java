@@ -1,7 +1,7 @@
 package com.practice.news.Controller;
 
 import com.practice.news.Model.News;
-import com.practice.news.RestAPI;
+import com.practice.news.Model.RestAPI;
 import com.practice.news.Security.AuthenticationFacade;
 import com.practice.news.Security.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,15 @@ public class NewsManagementController {
 
 	@GetMapping(value = "/edit-news/{id}")
 	public String editNews(@PathVariable String id, Model model) {
+
 		ResponseEntity<News> responseEntity = RestAPI.request("", HttpMethod.GET, "/news/" + id, new ParameterizedTypeReference<News>() {
 		});
 		if (responseEntity.getStatusCode() != HttpStatus.OK) {
 			return "redirect:/";
+		}
+		News news = responseEntity.getBody();
+		if (!news.getAuthor().equals(authentication.getAuthentication().getName())) {
+			return "error";
 		}
 		model.addAttribute("news", responseEntity.getBody());
 		return "edit-news";
@@ -61,14 +66,14 @@ public class NewsManagementController {
 	@PutMapping(value = "/edit-news")
 	public String editNews(@Valid @ModelAttribute("news") News news, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "add-news";
+			return "edit-news";
 		}
 
 		ResponseEntity<String> responseEntity = RestAPI.request(news, HttpMethod.PUT, "/news", new ParameterizedTypeReference<String>() {
 		});
-
+		System.out.println("Client: Put edit news " + responseEntity.getStatusCode());
 		if (responseEntity.getStatusCode() != HttpStatus.ACCEPTED) {
-			return "add-news";
+			return "edit-news";
 		}
 		return "redirect:/";
 	}
@@ -80,7 +85,7 @@ public class NewsManagementController {
 		});
 
 		if (responseEntity.getStatusCode() != HttpStatus.ACCEPTED) {
-			return "add-news";
+			return "Not Success";
 		}
 		return "Success";
 	}

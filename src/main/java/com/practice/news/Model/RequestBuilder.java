@@ -1,4 +1,4 @@
-package com.practice.news.Controller;
+package com.practice.news.Model;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
