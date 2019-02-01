@@ -70,7 +70,7 @@ public class NewsManagementController {
 			return "edit-news";
 		}
 		ResponseEntity<String> responseEntity = RestAPI.request(news, HttpMethod.PUT,
-				"/news", new ParameterizedTypeReference<String>() {
+				"/news/" + news.getId(), new ParameterizedTypeReference<String>() {
 				});
 		if (responseEntity.getStatusCode() != HttpStatus.ACCEPTED) {
 			bindingResult.addError(new ObjectError(bindingResult.getObjectName(), responseEntity.getBody()));
@@ -83,7 +83,7 @@ public class NewsManagementController {
 	public @ResponseBody
 	String deleteNews(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = RestAPI.request(new News(Long.parseLong(id)), HttpMethod.DELETE,
-				"/news", new ParameterizedTypeReference<String>() {
+				"/news/" + id, new ParameterizedTypeReference<String>() {
 				});
 
 		if (responseEntity.getStatusCode() != HttpStatus.ACCEPTED) {
