@@ -5,7 +5,6 @@ import com.practice.news.Controller.InterfaceFormatter.iFormatter;
 
 import java.io.IOException;
 
-
 public class XMLFormatter implements iFormatter {
 
 	private XmlMapper xmlMapper;

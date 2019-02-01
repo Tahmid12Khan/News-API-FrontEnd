@@ -4,7 +4,6 @@ import com.practice.news.Model.News;
 import com.practice.news.Model.RestAPI;
 import com.practice.news.Security.AuthenticationFacade;
 import com.practice.news.Security.IAuthenticationFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,10 +19,8 @@ import javax.validation.Valid;
 @Controller
 public class NewsManagementController {
 
-
 	private IAuthenticationFacade authentication;
 
-	@Autowired
 	public NewsManagementController(AuthenticationFacade authentication) {
 		this.authentication = authentication;
 	}
@@ -38,10 +36,12 @@ public class NewsManagementController {
 		if (bindingResult.hasErrors()) {
 			return "add-news";
 		}
-		ResponseEntity<String> responseEntity = RestAPI.request(news, HttpMethod.POST, "/news", new ParameterizedTypeReference<String>() {
-		});
+		ResponseEntity<String> responseEntity = RestAPI.request(news, HttpMethod.POST,
+				"/news", new ParameterizedTypeReference<String>() {
+				});
 
 		if (responseEntity.getStatusCode() != HttpStatus.CREATED) {
+			bindingResult.addError(new ObjectError(bindingResult.getObjectName(), responseEntity.getBody()));
 			return "add-news";
 		}
 		return "redirect:/";
@@ -50,8 +50,9 @@ public class NewsManagementController {
 	@GetMapping(value = "/edit-news/{id}")
 	public String editNews(@PathVariable String id, Model model) {
 
-		ResponseEntity<News> responseEntity = RestAPI.request("", HttpMethod.GET, "/news/" + id, new ParameterizedTypeReference<News>() {
-		});
+		ResponseEntity<News> responseEntity = RestAPI.request("", HttpMethod.GET,
+				"/news/" + id, new ParameterizedTypeReference<News>() {
+				});
 		if (responseEntity.getStatusCode() != HttpStatus.OK) {
 			return "redirect:/";
 		}
@@ -68,11 +69,11 @@ public class NewsManagementController {
 		if (bindingResult.hasErrors()) {
 			return "edit-news";
 		}
-
-		ResponseEntity<String> responseEntity = RestAPI.request(news, HttpMethod.PUT, "/news", new ParameterizedTypeReference<String>() {
-		});
-		System.out.println("Client: Put edit news " + responseEntity.getStatusCode());
+		ResponseEntity<String> responseEntity = RestAPI.request(news, HttpMethod.PUT,
+				"/news", new ParameterizedTypeReference<String>() {
+				});
 		if (responseEntity.getStatusCode() != HttpStatus.ACCEPTED) {
+			bindingResult.addError(new ObjectError(bindingResult.getObjectName(), responseEntity.getBody()));
 			return "edit-news";
 		}
 		return "redirect:/";
@@ -81,14 +82,13 @@ public class NewsManagementController {
 	@DeleteMapping(value = "/delete-news/{id}")
 	public @ResponseBody
 	String deleteNews(@PathVariable String id) {
-		ResponseEntity<String> responseEntity = RestAPI.request(new News(Long.parseLong(id)), HttpMethod.DELETE, "/news", new ParameterizedTypeReference<String>() {
-		});
+		ResponseEntity<String> responseEntity = RestAPI.request(new News(Long.parseLong(id)), HttpMethod.DELETE,
+				"/news", new ParameterizedTypeReference<String>() {
+				});
 
 		if (responseEntity.getStatusCode() != HttpStatus.ACCEPTED) {
 			return "Not Success";
 		}
 		return "Success";
 	}
-
-
 }

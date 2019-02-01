@@ -1,12 +1,10 @@
 package com.practice.news.Error;
 
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@ResponseStatus
+
 public class ErrorDetails {
 	private Date timestamp;
 	private List<String> message;

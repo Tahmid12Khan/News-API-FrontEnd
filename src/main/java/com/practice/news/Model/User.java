@@ -2,15 +2,12 @@ package com.practice.news.Model;
 
 import com.practice.news.Validation.FieldMatch;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.validation.constraints.Size;
 
-
-@Entity
 @FieldMatch(first = "password", second = "matchingPassword", message = "Password did not match")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	private Long id;
 	@Size(min = 1, message = "Name cannot be of size 0")
 	@Size(max = 50, message = "Name cannot be more than 50 characters")

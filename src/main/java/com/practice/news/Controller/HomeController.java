@@ -1,6 +1,5 @@
 package com.practice.news.Controller;
 
-
 import com.practice.news.Model.News;
 import com.practice.news.Model.PagerModel;
 import com.practice.news.Model.RestAPI;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 @Controller
 public class HomeController {
-
 
 	@GetMapping("/")
 	public String greeting(@RequestParam(defaultValue = "1") int page, Model model) {

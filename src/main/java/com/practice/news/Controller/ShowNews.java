@@ -1,7 +1,5 @@
 package com.practice.news.Controller;
 
-import com.practice.news.Controller.Factory.FormatterFactory;
-import com.practice.news.Controller.InterfaceFormatter.iFormatter;
 import com.practice.news.Error.Invalid;
 import com.practice.news.Model.News;
 import com.practice.news.Model.RestAPI;
@@ -32,26 +30,23 @@ public class ShowNews {
 
 	@GetMapping(value = "/news/download/{option}/{id}")
 	public ResponseEntity<Resource> formatView(@PathVariable Map<String, String> req) {
-		ResponseEntity<News> news = RestAPI.request("", HttpMethod.GET, "news/" + req.get("id"), new ParameterizedTypeReference<News>() {
-		});
+		ResponseEntity<String> news = RestAPI.request("", HttpMethod.GET, "news/" + req.get("id"),
+				new ParameterizedTypeReference<String>() {
+				},
+				"application/" + req.get("option"));
 		if (news.getStatusCode() != HttpStatus.OK) {
 			throw new Invalid("News not found");
 		}
 
-		System.out.println(req.get("option"));
-		iFormatter formatter = FormatterFactory.getFormatter(req.get("option"));
-		String s = formatter.stringFormat(news.getBody());
-
-		return download(s, Long.parseLong(req.get("id")));
+		return download(news.getBody(), Long.parseLong(req.get("id")), req.get("option"));
 
 	}
 
-	private ResponseEntity<Resource> download(String s, Long id) {
-
-
+	private ResponseEntity<Resource> download(String s, Long id, String option) {
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType("application/octet-stream"))
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + id + ".txt")
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
+						id + "." + option)
 				.body(new ByteArrayResource(s.getBytes()));
 	}
 

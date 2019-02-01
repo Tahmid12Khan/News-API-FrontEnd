@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Entity
+
 public class News {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
